@@ -4,288 +4,59 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>JobPulse</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --border: #2a2d3a;
-      --accent: #6366f1;
-      --accent-hover: #818cf8;
-      --text: #e2e8f0;
-      --muted: #8b93a7;
-      --tag: #1e2035;
-      --green: #22c55e;
-      --radius: 10px;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 14px;
-      min-height: 100vh;
-    }
-
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 56px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .logo {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: -0.5px;
-    }
-
-    .logo span { color: var(--text); }
-
-    .stats-bar {
-      display: flex;
-      gap: 20px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .stats-bar strong { color: var(--text); }
-
-    .container {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 24px 16px;
-    }
-
-    .controls {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    input, select {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text);
-      padding: 8px 12px;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-
-    input:focus, select:focus { border-color: var(--accent); }
-
-    #search { flex: 1; min-width: 200px; }
-
-    button {
-      background: var(--accent);
-      border: none;
-      border-radius: var(--radius);
-      color: #fff;
-      padding: 8px 16px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.15s;
-      white-space: nowrap;
-    }
-
-    button:hover { background: var(--accent-hover); }
-
-    button.secondary {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-    }
-
-    button.secondary:hover { border-color: var(--accent); color: var(--accent); }
-
-    .status-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 500;
-      background: var(--tag);
-      color: var(--muted);
-    }
-
-    .badge.remotive  { background: #1a2535; color: #60a5fa; }
-    .badge.arbeitnow { background: #1a2527; color: #34d399; }
-    .badge.hn_hiring { background: #271e13; color: #fb923c; }
-
-    .job-list { display: flex; flex-direction: column; gap: 10px; }
-
-    .job-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 6px;
-      transition: border-color 0.15s;
-    }
-
-    .job-card:hover { border-color: var(--accent); }
-
-    .job-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-      text-decoration: none;
-    }
-
-    .job-title:hover { color: var(--accent); }
-
-    .job-meta {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 4px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .job-meta span::before { margin-right: 4px; }
-
-    .job-tags {
-      margin-top: 8px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .tag {
-      background: var(--tag);
-      border-radius: 4px;
-      padding: 2px 7px;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .job-right {
-      text-align: right;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 6px;
-      min-width: 90px;
-    }
-
-    .empty, .loading {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
-    }
-
-    .loading::after {
-      content: '';
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 2px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      vertical-align: middle;
-      margin-left: 8px;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .pagination {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      margin-top: 24px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .ingest-status {
-      padding: 10px 14px;
-      border-radius: var(--radius);
-      font-size: 12px;
-      margin-bottom: 16px;
-      display: none;
-    }
-
-    .ingest-status.success { background: #0f2318; border: 1px solid #166534; color: var(--green); display: block; }
-    .ingest-status.error   { background: #2d1010; border: 1px solid #7f1d1d; color: #f87171; display: block; }
-    .ingest-status.running { background: var(--surface); border: 1px solid var(--border); color: var(--muted); display: block; }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<header>
-  <div class="logo">Job<span>Pulse</span></div>
-  <div class="stats-bar" id="statsBar">Loading...</div>
+<header class="bg-jp-surface border-b border-jp-border px-6 flex items-center justify-between h-14 sticky top-0 z-10">
+  <div class="text-lg font-bold text-jp-accent tracking-tight">Job<span class="text-jp-text">Pulse</span></div>
+  <div class="flex gap-5 text-xs text-jp-muted" id="statsBar">Loading...</div>
 </header>
 
-<div class="container">
-  <div class="controls">
-    <input id="search" type="text" placeholder="Search jobs, companies, skills..." />
+<div class="max-w-4xl mx-auto px-4 py-6">
+
+  <div class="flex gap-2.5 mb-5 flex-wrap">
+    <input id="search" type="text" placeholder="Search jobs, companies, skills..." class="flex-1 min-w-[200px]" />
     <select id="sourceFilter">
       <option value="">All sources</option>
       <option value="remotive">Remotive</option>
       <option value="arbeitnow">Arbeitnow</option>
       <option value="hn_hiring">HN Hiring</option>
     </select>
-    <button onclick="fetchJobs(0)">Search</button>
-    <button class="secondary" onclick="triggerIngest()" id="ingestBtn">Run Ingestion</button>
+    <button onclick="fetchJobs(0)" class="btn-primary">Search</button>
+    <button onclick="triggerIngest()" id="ingestBtn" class="btn-secondary">Run Ingestion</button>
   </div>
 
   <div class="ingest-status" id="ingestStatus"></div>
 
-  <div class="status-row">
+  <div class="flex items-center justify-between mb-3.5 text-jp-muted text-xs">
     <span id="resultCount">—</span>
     <span id="lastUpdated"></span>
   </div>
 
-  <div class="job-list" id="jobList">
-    <div class="loading">Loading jobs</div>
+  <div class="flex flex-col gap-2.5" id="jobList">
+    <div class="state-message">Loading jobs<span class="spinner"></span></div>
   </div>
 
-  <div class="pagination" id="pagination"></div>
+  <div class="flex justify-center items-center gap-3 mt-6 text-jp-muted text-xs" id="pagination"></div>
+
 </div>
 
 <script>
   const API = '';
   let currentOffset = 0;
   const LIMIT = 50;
-  let totalJobs = 0;
 
   async function fetchStats() {
     try {
       const r = await fetch(`${API}/api/stats`);
       const data = await r.json();
       const parts = Object.entries(data.by_source)
-        .map(([s, c]) => `<strong>${c}</strong> ${s}`)
+        .map(([s, c]) => `<strong class="text-jp-text">${c}</strong> ${s}`)
         .join(' · ');
       document.getElementById('statsBar').innerHTML =
-        `<strong>${data.total_jobs}</strong> total jobs &nbsp;|&nbsp; ${parts || 'No data yet'}`;
-    } catch (e) {
+        `<strong class="text-jp-text">${data.total_jobs}</strong> total &nbsp;|&nbsp; ${parts || 'No data yet'}`;
+    } catch {
       document.getElementById('statsBar').textContent = 'Stats unavailable';
     }
   }
@@ -298,17 +69,17 @@
     if (q) params.set('q', q);
     if (source) params.set('source', source);
 
-    document.getElementById('jobList').innerHTML = '<div class="loading">Loading jobs</div>';
+    document.getElementById('jobList').innerHTML =
+      '<div class="state-message">Loading jobs<span class="spinner"></span></div>';
 
     try {
       const r = await fetch(`${API}/api/jobs?${params}`);
       const data = await r.json();
-      totalJobs = data.total;
       renderJobs(data.jobs, data.total, offset);
       renderPagination(data.total, offset);
-    } catch (e) {
+    } catch {
       document.getElementById('jobList').innerHTML =
-        '<div class="empty">Failed to load jobs. Is the server running?</div>';
+        '<div class="state-message">Failed to load jobs. Is the server running?</div>';
     }
   }
 
@@ -326,7 +97,7 @@
 
     if (!jobs.length) {
       document.getElementById('jobList').innerHTML =
-        '<div class="empty">No jobs found. Try running ingestion or adjusting filters.</div>';
+        '<div class="state-message">No jobs found. Try running ingestion or adjusting filters.</div>';
       return;
     }
 
@@ -341,14 +112,13 @@
               <span>📍 ${escHtml(j.location)}</span>
               ${j.posted_at ? `<span>🕐 ${timeAgo(j.posted_at)}</span>` : ''}
             </div>
-            ${tags.length ? `<div class="job-tags">${tags.map(t => `<span class="tag">${escHtml(t)}</span>`).join('')}</div>` : ''}
+            ${tags.length ? `<div class="job-tags">${tags.map(t => `<span class="job-tag">${escHtml(t)}</span>`).join('')}</div>` : ''}
           </div>
           <div class="job-right">
             <span class="badge ${j.source}">${j.source}</span>
-            <span style="color:var(--muted);font-size:11px">${timeAgo(j.ingested_at)}</span>
+            <span class="text-jp-muted text-[11px]">${timeAgo(j.ingested_at)}</span>
           </div>
-        </div>
-      `;
+        </div>`;
     }).join('');
   }
 
@@ -358,10 +128,9 @@
     const hasNext = offset + LIMIT < total;
     if (!hasPrev && !hasNext) { pg.innerHTML = ''; return; }
     pg.innerHTML = `
-      <button class="secondary" onclick="fetchJobs(${offset - LIMIT})" ${hasPrev ? '' : 'disabled'}>← Prev</button>
+      <button class="btn-secondary" onclick="fetchJobs(${offset - LIMIT})" ${hasPrev ? '' : 'disabled'}>← Prev</button>
       <span>Page ${Math.floor(offset / LIMIT) + 1} / ${Math.ceil(total / LIMIT)}</span>
-      <button class="secondary" onclick="fetchJobs(${offset + LIMIT})" ${hasNext ? '' : 'disabled'}>Next →</button>
-    `;
+      <button class="btn-secondary" onclick="fetchJobs(${offset + LIMIT})" ${hasNext ? '' : 'disabled'}>Next →</button>`;
   }
 
   async function triggerIngest() {
@@ -382,7 +151,7 @@
       status.textContent = `✓ Ingestion complete — ${summary}`;
       fetchJobs(0);
       fetchStats();
-    } catch (e) {
+    } catch {
       status.className = 'ingest-status error';
       status.textContent = 'Ingestion failed. Check the server logs.';
     } finally {
@@ -392,7 +161,9 @@
   }
 
   function escHtml(str) {
-    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return String(str || '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
   document.getElementById('search').addEventListener('keydown', e => {
