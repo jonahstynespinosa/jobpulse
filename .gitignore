@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+*.egg-info/
+
+# Database (committed intentionally by CI — remove this line to track it)
+# backend/jobpulse.db
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
